@@ -1,0 +1,19 @@
+{
+  "name": "kevinhooke-replybot",
+  "version": "1.0.0",
+  "description": "Twitter reply bot for kevinhooke",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "author": "Kevin Hooke",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.218.1",
+    "jasmine": "^2.99.0",
+    "moment": "^2.18.1",
+    "oauth": "^0.9.15",
+    "redis": "^2.8.0",
+    "tracery-grammar": "^2.7.3"
+  }
+}

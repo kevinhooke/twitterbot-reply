@@ -1,0 +1,7 @@
+{
+  "sendTweetEnabled" : "true",
+  "twitterConsumerKey" : "your-key-here",
+  "twitterSecretKey" : "your-key-here",
+  "accessToken" : "your-token-here",
+  "accessTokenSecret" : "your-secret-here"
+}

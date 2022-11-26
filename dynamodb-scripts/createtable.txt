@@ -1,0 +1,66 @@
+#attributes planned but not in index
+        AttributeName=tweetdate,AttributeType=S \
+        AttributeName=tweettext,AttributeType=S \
+
+
+#not working
+    --global-secondary-indexes IndexName="Index",\
+        KeySchema=["{AttributeName=tweetdate,KeyType=RANGE}"],\
+        Projection="{ProjectionType=INCLUDE}",ProvisionedThroughput="{ReadCapacityUnits=1,WriteCapacityUnits=1}"\
+
+
+
+aws dynamodb create-table \
+    --table-name tweetbottweets \
+    --attribute-definitions \
+        AttributeName=createdate,AttributeType=S\
+        AttributeName=tweetdate,AttributeType=S\
+    --key-schema \
+        AttributeName=createdate,KeyType=HASH \
+    --provisioned-throughput \
+        ReadCapacityUnits=1,WriteCapacityUnits=1 \
+    --global-secondary-indexes IndexName="Index",KeySchema=["{AttributeName=createdate,KeyType=HASH},{AttributeName=tweetdate,KeyType=RANGE}"],Projection="{ProjectionType=INCLUDE,NonKeyAttributes=["tweetdate"]}",ProvisionedThroughput="{ReadCapacityUnits=1,WriteCapacityUnits=1}"\
+    --endpoint-url http://localhost:8000
+
+#delete item
+aws dynamodb delete-item --table-name tweetbotreplies --key '{ "statusKey" : { "S" : "lastTweetId" } }'
+
+#statusKey = lastReplyId: id of last tweet reply
+
+aws dynamodb create-table \
+    --table-name tweetbotreplies \
+    --attribute-definitions \
+        AttributeName=statusKey,AttributeType=S\
+    --key-schema \
+        AttributeName=statusKey,KeyType=HASH \
+    --provisioned-throughput \
+        ReadCapacityUnits=1,WriteCapacityUnits=1 \
+    --endpoint-url http://localhost:8000
+
+
+#previous approaches
+
+#without secondary index
+aws dynamodb create-table \
+    --table-name tweetbotreplies \
+    --attribute-definitions \
+        AttributeName=last_reply_tweet_id,AttributeType=S\
+    --key-schema \
+        AttributeName=last_reply_tweet_id,KeyType=HASH \
+    --provisioned-throughput \
+        ReadCapacityUnits=1,WriteCapacityUnits=1 \
+    --endpoint-url http://localhost:8000
+
+#with secondary index
+aws dynamodb create-table \
+    --table-name tweetbotreplies \
+    --attribute-definitions \
+        AttributeName=last_reply_tweet_id,AttributeType=S\
+    --key-schema \
+        AttributeName=last_reply_tweet_id,KeyType=HASH \
+    --provisioned-throughput \
+        ReadCapacityUnits=1,WriteCapacityUnits=1 \
+    --global-secondary-indexes IndexName="tweetreplydate_index",KeySchema=["{AttributeName=last_reply_tweet_id,KeyType=HASH}"],Projection="{ProjectionType=INCLUDE,NonKeyAttributes=["tweetreplydate"]}",ProvisionedThroughput="{ReadCapacityUnits=1,WriteCapacityUnits=1}"\
+    --endpoint-url http://localhost:8000
+
+aws dynamodb scan --table-name=tweetbotreplies
